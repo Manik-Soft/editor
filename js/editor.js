@@ -49,7 +49,7 @@
             editor.id = key;
             target.parentElement.insertBefore(tab, target);
             document.querySelector('body').insertBefore(editor, document.querySelector('pre'));
-            createWDE(key, name, content ? content : '');
+            createEditor(key, name, content ? content : '');
             this.changeSelected(tab);
         },
         items: function() {
@@ -66,7 +66,7 @@
                 sel.classList.remove('selected');
             }
             item.classList.add('selected');
-            this.hideWDEs();
+            this.hideEditors();
             tabs.editors[item.getAttribute('data-key')].style.display = 'block';
             setCurrent(item.getAttribute('data-path'), '');
         },
@@ -88,7 +88,7 @@
             });
             return sel.length !== 0 ? sel[0] : false;
         },
-        hideWDEs: function() {
+        hideEditors: function() {
             var pre = document.querySelectorAll('pre');
             [].forEach.call(pre, function(element, index) {
                 element.style.display = 'none';
@@ -170,7 +170,7 @@
             tabs.changeSelected(fi);
         } else {
             setCurrent('', '');
-            tabs.hideWDEs();
+            tabs.hideEditors();
         }
     }
 
@@ -197,7 +197,7 @@
             var path = eval(decodeURIComponent(req.data)).path;
             tabs.insert(tabHolder.querySelector('li:last-child'), path, file, req.responseText);
         } else {
-            initWDE(req, txt);
+            initEditors(req, txt);
         }
     }
 
@@ -213,15 +213,15 @@
         }, showHideDialog, true);
     }
 
-    function createWDE(id, file, txt) {
+    function createEditor(id, file, txt) {
         var editor = ace.edit(id);
         editor.setTheme(theme);
         ace.require("ace/ext/language_tools");
         modelist = ace.require('ace/ext/modelist');
-        initWDE(editor, file, txt);
+        initEditors(editor, file, txt);
     }
 
-    function initWDE(editor, file, txt) {
+    function initEditors(editor, file, txt) {
         var mode = modelist.getModeForPath(file).mode;
         editor.session.setMode(mode);
         editor.$blockScrolling = Infinity;

@@ -59,9 +59,10 @@ class Users
 ?>
 ```
 
-editor.js - key configurations
+editor.js
 --------------
 ```sh
+/* key configurations */
 var keys = (function() {
     return {
         MODIFIER_KEY: 'altKey',
@@ -76,6 +77,10 @@ var keys = (function() {
         TOGGLE_HELP_WINDOW: 'H'.charCodeAt(0)
     };
 })();
+
+/* Execute Editor */
+WDE.Init('ace-theme', 'path to the allowed folder');
+
 ```
 
 Used plugins, frameworks etc:
