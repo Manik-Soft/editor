@@ -115,9 +115,9 @@ else {
         </h3>
         <div class="dialog-content text-center">
             <label></label><br>
-            <input type="text" name="name" placeholder="demo" autofocus><br>
+            <input type="text" name="name" placeholder="User" autofocus><br>
             <label></label><br>
-            <input type="password" name="pass" placeholder="demo"><br><br>
+            <input type="password" name="pass" placeholder="Password"><br><br>
             <label>Choose Editor theme</label><br>
             <select id="ace-theme" size="1" name="ace-theme">
                 <optgroup label="Bright"><option value="ace/theme/chrome">Chrome</option>
