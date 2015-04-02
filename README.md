@@ -50,16 +50,16 @@ config.php - users, passwords, paths configurations
 // user_password: password_hash('user_password', PASSWORD_DEFAULT);
 class Users
 {
-	private $users = array(
-    	'user_name' => 
-    	array('password' => 'user_password', 'path' => 'path to the allowed folder')
-    	// More users -> 
-	);
+    private $users = array(
+        'user_name' => 
+        array('password' => 'user_password', 'path' => 'path to the allowed folder')
+        // More users -> 
+    );
 
 ?>
 ```
 
-editor.js - key configuration
+editor.js - key configurations
 --------------
 ```sh
 var keys = (function() {
@@ -90,6 +90,6 @@ Author: Tóth András
 http://atandrastoth.co.uk/
 
 2015-04-01
-[Video]:http://atandrastoth.co.uk/main/plugins/
+[Video]:http://atandrastoth.co.uk/main/pages/plugins/webeditor/
 [WDE]:http://editor.atandrastoth.co.uk/
 [ACE]:http://ace.c9.io/
