@@ -21,6 +21,17 @@ Each user can be assigned:
 
 Version
 ----
+1.2.0 beta
+
+- Add SQL testing (Left Alt+R execute SQL query)
+- Add db connection options to config.php
+- Include SqlFuncProc php class modified version
+- some minor modification
+
+2015-04-10
+
+Version
+----
 1.0.0 beta
 
 Compatibility - tested
@@ -47,14 +58,22 @@ config.php - users, passwords, paths configurations
 --------------
 ```sh
 <?php
-// user_password: password_hash('user_password', PASSWORD_DEFAULT);
 class Users
 {
+    // user_password: password_hash('user_password', PASSWORD_DEFAULT);
     private $users = array(
-        'user_name' => 
-        array('password' => 'user_password', 'path' => 'path to the allowed folder')
-        // More users -> 
-    );
+                'user_name' => array(
+                    'password' => 'user_password',
+                    'path' => 'path to the allowed folder',
+                    'SQL' => array(
+                        'conn' => 'mysql:host=YOUR_HOST;dbname=YOUR_DBNAME;charset=utf8',
+                    //  'conn' => 'sqlsrv:Server=YOUR_SERVERNAME;Database=YOUR_DBNAME',
+                        'user' => 'DB_USER',
+                        'pass' => 'DB_USER_PASSWORD'
+                    )
+                )
+                // More users -> 
+            );
 
 ?>
 ```
@@ -62,10 +81,11 @@ class Users
 editor.js
 --------------
 ```sh
-/* key configurations */
+/* key configurations (LEFT ALT) */
 var keys = (function() {
     return {
-        MODIFIER_KEY: 'altKey',
+        MODIFIER_KEY_ALLOW: 'altKey',
+        MODIFIER_KEY_DENY: 'ctrlKey',
         COPY_FILE: 'C'.charCodeAt(0),
         PASTE_FILE: 'V'.charCodeAt(0),
         SAVE_FILE: 'S'.charCodeAt(0),
@@ -74,7 +94,8 @@ var keys = (function() {
         PREV_TAB: 'A'.charCodeAt(0),
         CLOSE_TAB: 'Q'.charCodeAt(0),
         ADD_NEW_TAB: 'N'.charCodeAt(0),
-        TOGGLE_HELP_WINDOW: 'H'.charCodeAt(0)
+        TOGGLE_HELP_WINDOW: 'H'.charCodeAt(0),
+        EXECUTE_SQL: 'R'.charCodeAt(0)
     };
 })();
 

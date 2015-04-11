@@ -9,6 +9,7 @@ if (isset($_POST['name'])) {
         $_SESSION['user']['path'] = $u->get_path();
         $_SESSION['user']['full_path'] = $u->get_full_path();
         $_SESSION['user']['name'] = $u->get_name();
+        $_SESSION['user']['SQL'] = $u->get_SQL();
         $_SESSION['ace-theme'] = $_POST['ace-theme'];
     } else {
         $error = 'Wrong name or password!';
@@ -85,6 +86,12 @@ if (isset($_SESSION['user'])) {
     </div>
     <div class="dialog sh-5 no-select hidden" id="help-window">
         <h3>Help
+            <span class="icon close-dialog" onclick="this.parentElement.parentElement.classList.add('hidden');"></span>
+        </h3>
+        <div class="dialog-content"></div>
+    </div>
+    <div class="dialog sh-5 no-select hidden" id="sql-window">
+        <h3>SQL Result
             <span class="icon close-dialog" onclick="this.parentElement.parentElement.classList.add('hidden');"></span>
         </h3>
         <div class="dialog-content"></div>

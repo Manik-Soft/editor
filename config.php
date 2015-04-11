@@ -3,10 +3,17 @@ class Users
 {
     // user_password: password_hash('user_password', PASSWORD_DEFAULT);
     private $users = array(
-        'user_name' => 
-        array('password' => 'user_password', 'path' => 'path to the allowed folder')
-        // More users -> 
-    );
+                'user_name' => array(
+                    'password' => 'user_password',
+                    'path' => 'path to the allowed folder',
+                    'SQL' => array(
+                        'conn' => 'mysql:host=YOUR_HOST;dbname=YOUR_DBNAME;charset=utf8',
+                        'user' => 'DB_USER',
+                        'pass' => 'DB_USER_PASS'
+                    )
+                )
+                // More users -> 
+            );
     
     private $name = null;
     private $password = null;
@@ -25,6 +32,7 @@ class Users
             $this->valid = true;
             $this->name = $name;
             $this->path = $this->users[$name]['path'];
+            $this->SQL = $this->users[$name]['SQL'];
         }
     }
     public function valid() {
@@ -38,5 +46,8 @@ class Users
     }
     public function get_name() {
         return $this->name;
+    }
+    public function get_SQL() {
+        return $this->SQL;
     }
 }

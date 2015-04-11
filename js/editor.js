@@ -3,7 +3,7 @@
     WDE.Version = {
         Author: 'Tóth András',
         Name: 'Web Dev Editor - WDE',
-        Version: '1.0.0 beta',
+        Version: '1.2.0 beta',
         Licence: 'MIT'
     };
     if (!window.location.origin) {
@@ -12,7 +12,8 @@
     var origin = window.location.origin;
     var keys = (function() {
         return {
-            MODIFIER_KEY: 'altKey',
+            MODIFIER_KEY_ALLOW: 'altKey',
+            MODIFIER_KEY_DENY: 'ctrlKey',
             COPY_FILE: 'C'.charCodeAt(0),
             PASTE_FILE: 'V'.charCodeAt(0),
             SAVE_FILE: 'S'.charCodeAt(0),
@@ -21,13 +22,14 @@
             PREV_TAB: 'A'.charCodeAt(0),
             CLOSE_TAB: 'Q'.charCodeAt(0),
             ADD_NEW_TAB: 'N'.charCodeAt(0),
-            TOGGLE_HELP_WINDOW: 'H'.charCodeAt(0)
+            TOGGLE_HELP_WINDOW: 'H'.charCodeAt(0),
+            EXECUTE_SQL: 'R'.charCodeAt(0)
         };
     })();
     var viewableFiles = 'file-audio,file-video,file-img,file-xls,file-doc,file-pdf,file-zip',
-        viewableAndEditable = 'svg';
+        viewableAndEditable = 'svg,sql';
     var txt = ('innerText' in HTMLElement.prototype) ? 'innerText' : 'textContent';
-    var dialog, dialogHeader, dialogContent, currentPath, theme, modelist, helpWindow,
+    var dialog, sqlWindow, currentPath, theme, modelist, helpWindow,
         dial, tabHolder,
         tempFile = {
             path: '',
@@ -152,7 +154,7 @@
             if (!target) return;
         }
         if (!tabs.isSaved(target)) {
-            if (!confirm('Are you sure ?\n File: ' + target.getAttribute('data-file') + ' not saved!')) return;
+            if (!confirm('Are you sure ?\nFile: ' + target.getAttribute('data-file') + ' not saved!')) return;
             removeTab(target);
         } else {
             removeTab(target);
@@ -306,6 +308,27 @@
         s.setWrapLimitRange(session.$wrapLimitRange.min, session.$wrapLimitRange.max);
         // TODO: There might be more settings, but for now I'm fine with that.
         return s;
+    }
+
+    function testSQLQuery() {
+        if (!tabs.getSelected()) return;
+        var isSQL = tabs.getSelected().getAttribute('data-file').indexOf('sql');
+        if (isSQL != -1) {
+            var params = {};
+            new Util.Ajax().POST('com.php', {
+                params: {
+                    order: 'test_sql',
+                    path: currentPath[txt].replace(origin, ''),
+                    file: tabs.getSelected().getAttribute('data-file'),
+                    data: ace.edit(tabs.getSelected().getAttribute('data-key')).getValue()
+                }
+            }, function(e) {
+                var content = sqlWindow.querySelector('.dialog-content');
+                content.innerHTML = e.responseText;
+                content.scrollTop = 0;
+                sqlWindow.classList.remove('hidden');
+            });
+        }
     }
     WDE.toggleFullScreen = function(el) {
         Util.fullScreen.toggleFullScreen('body');
@@ -461,12 +484,11 @@
         dial = document.querySelector('.dialog-upload');
         dialog = document.querySelector('#browse-dialog');
         helpWindow = document.querySelector('#help-window');
-        dialogHeader = dialog.querySelector('h3');
-        dialogContent = dialog.querySelector('.dialog-content');
+        sqlWindow = document.querySelector('#sql-window');
         currentPath = document.querySelector('#current-path');
         new Util.movable().Init('#browse-dialog', 'body', '#browse-dialog h3');
         new Util.movable().Init('#help-window', 'body', '#help-window h3');
-        dialogContent.addEventListener('click', function(e) {
+        dialog.querySelector('.dialog-content').addEventListener('click', function(e) {
             switch (e.target.className) {
                 case 'navigator':
                     var paths = e.target.getAttribute('data-path').split('/');
@@ -499,7 +521,7 @@
         }, false);
         window.addEventListener('keydown', function(e) {
             var x = e.which || e.keyCode;
-            if (e[keys.MODIFIER_KEY]) {
+            if (e[keys.MODIFIER_KEY_ALLOW] && !e[keys.MODIFIER_KEY_DENY]) {
                 switch (x) {
                     case keys.COPY_FILE:
                         e.preventDefault();
@@ -536,6 +558,10 @@
                     case keys.TOGGLE_HELP_WINDOW:
                         e.preventDefault();
                         WDE.toggleHelperWindow();
+                        break;
+                    case keys.EXECUTE_SQL:
+                        e.preventDefault();
+                        testSQLQuery();
                         break;
                 }
             }

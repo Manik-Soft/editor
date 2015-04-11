@@ -43,6 +43,22 @@ if ($p->order == 'delete') {
     }
     echo json_encode(scan_dir($root, $p));
 }
+if ($p->order == 'test_sql') {
+    require_once ('sql_func_proc/sqlfuncproc.php');
+    $sql = $_SESSION['user']['SQL'];
+    if($sql['conn'] == ''){
+        echo 'Database connection is not configured!';
+        return;
+    }
+    $func = SqlFuncProc::getInstance($sql['conn'], $sql['user'], $sql['pass']);
+    $data = $func->runQuery($p->data, array(), false, true);
+    if (isset($data['error'])) {
+        echo json_encode($data);
+    } else {
+        echo $func->getHTMLtable($data, '', 'hovertable');
+    }
+}
+
 function delete_folder($folder) {
     $glob = glob($folder);
     foreach ($glob as $g) {
@@ -89,6 +105,7 @@ function get_type($ext) {
     if (strpos($ext, 'html') !== false) return 'file-html';
     if (strpos($ext, 'css') !== false) return 'file-css';
     if (strpos($ext, 'pdf') !== false) return 'file-pdf';
+    if (strpos($ext, 'sql') !== false) return 'file-sql';
     if (in_array($ext, explode(',', 'mp3,wav,pcm,wave,wma'))) return 'file-audio';
     if (in_array($ext, explode(',', 'mpg,mp4,ogg,webm,avi,wmv,mkv'))) return 'file-video';
     if (in_array($ext, explode(',', 'doc,docx'))) return 'file-doc';
