@@ -1,5 +1,6 @@
 (function() {
-    this.fileReader = function() {
+    'use strict';
+    Util.fileReader = function() {
         var init = function(types, readAs, callBack, multy) {
             multy = typeof multy == 'undefined' ? false : multy;
             var input = document.createElement('input');
@@ -53,7 +54,7 @@
             }
         };
     };
-    this.Ajax = function() {
+    Util.Ajax = function() {
         var xr = function() {
             if (typeof XMLHttpRequest !== 'undefined') {
                 return new XMLHttpRequest();
@@ -108,7 +109,7 @@
             }
         };
     };
-    this.fullScreen = {
+    Util.fullScreen = {
         isFullScreen: false,
         toggleFullScreen: function(selector) {
             if (!this.isFullScreen) {
@@ -149,7 +150,7 @@
         }
     };
     /* ---------------------  Audio ---------------------------*/
-    this.Tone = {
+    Util.Tone = {
         inTone: new Audio(),
         outTone: new Audio(),
         interval: null,
@@ -178,8 +179,27 @@
             clearInterval(this.interval);
         }
     };
+    /*-------------------Helper Extensions------------------*/
+    Util.bringToFront = function(item, groupSelector) {
+        var elems = document.querySelectorAll(groupSelector);
+        var highest = 0;
+        for (var i = 0; i < elems.length; i++) {
+            var zindex = document.defaultView.getComputedStyle(elems[i], null).zIndex;
+            if (!isNaN(parseInt(zindex)) && parseInt(zindex) > highest) {
+                highest = zindex;
+            }
+        }
+        item.style.zIndex = parseFloat(highest) + 1;
+    };
+    Util.extend = function(obj, prop) {
+        for (var i in prop) {
+            if (prop.hasOwnProperty(i)) {
+                obj[i] = prop[i];
+            }
+        }
+    };
     /*-----------------------Animations---------------------*/
-    this.fadeOut = function(el) {
+    Util.fadeOut = function(el) {
         el.style.opacity = 1;
         (function fade() {
             if ((el.style.opacity -= 0.1) < 0) {
@@ -190,7 +210,7 @@
         })();
     };
     // fade in
-    this.fadeIn = function(el, display) {
+    Util.fadeIn = function(el, display) {
         el.style.opacity = 0;
         el.style.display = display || "block";
         (function fade() {
@@ -201,7 +221,7 @@
             }
         })();
     };
-    this.scrollTo = function(element, to, duration) {
+    Util.scrollTo = function(element, to, duration) {
         if (duration < 0) return;
         var difference = to - element.scrollTop;
         var perTick = difference / duration * 10;
@@ -211,55 +231,83 @@
             scrollTo(element, to, duration - 10);
         }, 10);
     };
-    this.movable = function() {
-        var mouseDown = false,
-            dialog, parentElement, header;
+    Util.movable = function() {
+        var mouseDownForMove = false,
+            mouseDownForResize = false,
+            lastMovementX = 0,
+            lastMovementY = 0,
+            dialog, parentElement, header, grip;
 
-        function mouseDownEvent(e) {
+        function mouseDownForMoveEvent(e) {
             e.preventDefault();
             var button = e.button || e.which;
-            if (button == 1) mouseDown = true;
+            if (button == 1) mouseDownForMove = true;
+            Util.bringToFront(dialog, '.dialog');
+        }
+
+        function mouseDownEventResize(e) {
+            e.preventDefault();
+            var button = e.button || e.which;
+            if (button == 1) mouseDownForResize = true;
+            Util.bringToFront(dialog, '.dialog');
         }
 
         function mouseUpEvent(e) {
             e.preventDefault();
             var button = e.button || e.which;
-            if (button == 1) mouseDown = false;
+            if (button == 1) {
+                mouseDownForMove = false;
+                mouseDownForResize = false;
+            }
         }
 
         function mouseMoveEvent(e) {
             e.preventDefault();
-            if (mouseDown) {
-                e.movementX = e.movementX || e.mozMovementX || e.webkitMovementX || 0;
-                e.movementY = e.movementY || e.mozMovementY || e.webkitMovementY || 0;
+            if (mouseDownForMove) {
+                e = defineEvent(e);
                 var prop = {
-                    position: 'absolute',
                     top: (dialog.offsetTop + e.movementY).toString() + 'px',
                     left: (dialog.offsetLeft + e.movementX).toString() + 'px'
                 };
-                for (var i in prop) {
-                    if (prop.hasOwnProperty(i)) {
-                        dialog.style[i] = prop[i];
-                    }
-                }
+                Util.extend(dialog.style, prop);
             }
+            if (mouseDownForResize) {
+                e = defineEvent(e);
+                var padding = parseFloat(getComputedStyle(dialog).paddingLeft) + parseFloat(getComputedStyle(dialog).paddingRight);
+                var prop = {
+                    width: (dialog.offsetWidth - padding + e.movementX).toString() + 'px',
+                    height: (dialog.offsetHeight - padding + e.movementY).toString() + 'px'
+                };
+                Util.extend(dialog.style, prop);
+            }
+            lastMovementX = e.pageX;
+            lastMovementY = e.pageY;
         }
-        var init = function(item, parent, drag) {
+
+        function defineEvent(e) {
+            e.movementX = e.movementX || e.mozMovementX || e.webkitMovementX || e.pageX - lastMovementX;
+            e.movementY = e.movementY || e.mozMovementY || e.webkitMovementY || e.pageY - lastMovementY;
+            return e;
+        }
+        var init = function(item, parent, drag, resizeGrip) {
             dialog = document.querySelector(item);
             parentElement = document.querySelector(parent);
-            header = document.querySelector(drag);
-            header.addEventListener('mousedown', mouseDownEvent);
+            header = dialog.querySelector(drag);
+            grip = dialog.querySelector(resizeGrip);
+            header.addEventListener('mousedown', mouseDownForMoveEvent);
             parentElement.addEventListener('mouseup', mouseUpEvent);
             parentElement.addEventListener('mousemove', mouseMoveEvent, true);
+            if (grip) grip.addEventListener('mousedown', mouseDownEventResize, true);
         };
         var destroy = function() {
-            header.removeEventListener('mousedown', mouseDownEvent);
+            header.removeEventListener('mousedown', mouseDownForMoveEvent);
             parentElement.removeEventListener('mouseup', mouseUpEvent);
             parentElement.removeEventListener('mousemove', mouseMoveEvent);
+            if (grip) grip.removeEventListener('mousedown', mouseDownEventResize);
         };
         return {
-            Init: function(item, parent, drag) {
-                init(item, parent, drag);
+            Init: function(item, parent, drag, resizeGrip) {
+                init(item, parent, drag, resizeGrip);
             },
             Destroy: function() {
                 destroy();

@@ -19,6 +19,7 @@ class Users
     private $password = null;
     private $path = null;
     private $valid = false;
+    private $SQL = array();
 
     public static function get_instance($name, $pass) {
         static $instance = null;

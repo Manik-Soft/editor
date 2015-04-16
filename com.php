@@ -44,12 +44,12 @@ if ($p->order == 'delete') {
     echo json_encode(scan_dir($root, $p));
 }
 if ($p->order == 'test_sql') {
-    require_once ('sql_func_proc/sqlfuncproc.php');
     $sql = $_SESSION['user']['SQL'];
     if($sql['conn'] == ''){
-        echo 'Database connection is not configured!';
-        return;
+    	echo ('Database connection is not configured!');
+    	return;
     }
+    require_once ('sql_func_proc/sqlfuncproc.php');
     $func = SqlFuncProc::getInstance($sql['conn'], $sql['user'], $sql['pass']);
     $data = $func->runQuery($p->data, array(), false, true);
     if (isset($data['error'])) {

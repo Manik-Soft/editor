@@ -21,6 +21,13 @@ Each user can be assigned:
 
 Version
 ----
+1.3.0 beta
+
+- Scalable windows
+- Some invisible modification - refactor etc.
+
+Version
+----
 1.2.0 beta
 
 - Add SQL testing (Left Alt+R execute SQL query)

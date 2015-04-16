@@ -23,7 +23,7 @@ function destSession() {
     $_SESSION = array();
     if (ini_get("session.use_cookies")) {
         $params = session_get_cookie_params();
-        setcookie(session_name(), '', time() - 42000, $params["path"], $params["domain"], $params["secure"], $params["httponly"]);
+        setcookie(session_name(), '', time() - 3600, $params["path"], $params["domain"], $params["secure"], $params["httponly"]);
     }
     session_destroy();
 }
@@ -65,7 +65,7 @@ if (isset($_SESSION['user'])) {
         </ul>
         <span class="icon logout" onclick="document.querySelector('button').click()"></span>
         <span class="icon full-screen" onclick="WDE.toggleFullScreen(this);"></span>
-        <span class="icon open-folder" onclick="WDE.toggleBrowseDialog(undefined,true);"></span>
+        <span class="icon open-folder" onclick="WDE.toggleBrowserDialog(undefined,true);"></span>
         <form action="." method="post"><button type="submit" name="logout"></button></form>
     </div>
     <pre></pre>
@@ -75,26 +75,29 @@ if (isset($_SESSION['user'])) {
         <span class="icon copy-file" onclick="WDE.copyFile();"></span>
         <span class="icon paste-file" onclick="WDE.pasteFile();"></span>
     </div>
-    <div class="dialog sh-5 no-select hidden" id="browse-dialog">
-        <h3>Browser Dialog
-        <span class="icon close-dialog" onclick="WDE.toggleBrowseDialog(undefined, true);"></span>
-        <span class="icon create-new-file" onclick="WDE.createNewFile();"></span>
-        <span class="icon create-new-folder" onclick="WDE.createNewFolder();"></span>
-        <span class="icon upload-file" onclick="setTimeout(WDE.uploadFile());"></span>
+    <div class="dialog sh-2 no-select hidden" id="browser-window">
+        <h3>Browser Window
+            <span class="icon close-dialog" onclick="WDE.toggleBrowserDialog(undefined, true);"></span>
+            <span class="icon create-new-file" onclick="WDE.createNewFile();"></span>
+            <span class="icon create-new-folder" onclick="WDE.createNewFolder();"></span>
+            <span class="icon upload-file" onclick="setTimeout(WDE.uploadFile());"></span>
         </h3>
         <div class="dialog-content"></div>
+        <div class="grip"></div>
     </div>
-    <div class="dialog sh-5 no-select hidden" id="help-window">
-        <h3>Help
+    <div class="dialog sh-2 no-select hidden" id="help-window">
+        <h3>Help Window
+            <span class="icon close-dialog" onclick="WDE.toggleHelperWindow();"></span>
+        </h3>
+        <div class="dialog-content"></div>
+        <div class="grip"></div>
+    </div>
+    <div class="dialog sh-2 no-select hidden" id="sql-window">
+        <h3>SQL Result Window
             <span class="icon close-dialog" onclick="this.parentElement.parentElement.classList.add('hidden');"></span>
         </h3>
         <div class="dialog-content"></div>
-    </div>
-    <div class="dialog sh-5 no-select hidden" id="sql-window">
-        <h3>SQL Result
-            <span class="icon close-dialog" onclick="this.parentElement.parentElement.classList.add('hidden');"></span>
-        </h3>
-        <div class="dialog-content"></div>
+        <div class="grip"></div>
     </div>
     <div class="dialog-upload hidden sh-2"></div>
     <script src="js/src-min-noconflict/ace.js" type="text/javascript"></script>
@@ -140,7 +143,7 @@ else {
                     <option value="ace/theme/kuroir">Kuroir</option>
                     <option value="ace/theme/katzenmilch">KatzenMilch</option>
                 </optgroup>
-                    <optgroup label="Dark"><option value="ace/theme/ambiance">Ambiance</option>
+                <optgroup label="Dark"><option value="ace/theme/ambiance">Ambiance</option>
                     <option value="ace/theme/chaos">Chaos</option>
                     <option value="ace/theme/clouds_midnight">Clouds Midnight</option>
                     <option value="ace/theme/cobalt">Cobalt</option>

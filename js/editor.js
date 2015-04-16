@@ -3,7 +3,7 @@
     WDE.Version = {
         Author: 'Tóth András',
         Name: 'Web Dev Editor - WDE',
-        Version: '1.2.0 beta',
+        Version: '1.3.0 beta',
         Licence: 'MIT'
     };
     if (!window.location.origin) {
@@ -29,8 +29,8 @@
     var viewableFiles = 'file-audio,file-video,file-img,file-xls,file-doc,file-pdf,file-zip',
         viewableAndEditable = 'svg,sql';
     var txt = ('innerText' in HTMLElement.prototype) ? 'innerText' : 'textContent';
-    var dialog, sqlWindow, currentPath, theme, modelist, helpWindow,
-        dial, tabHolder,
+    var browserWindow, sqlWindow, currentPath, theme, modelist, helpWindow,
+        dialogUpload, tabHolder,
         tempFile = {
             path: '',
             file: '',
@@ -187,9 +187,10 @@
             li.innerHTML = '<a data-path="' + item.path + '" class="' + item.type + '">' + item.name + str + '</a>';
             ul.appendChild(li);
         });
-        dialog.children[1].innerHTML = '';
-        dialog.children[1].appendChild(ul);
-        dialog.classList.remove('hidden');
+        browserWindow.children[1].innerHTML = '';
+        browserWindow.children[1].appendChild(ul);
+        browserWindow.classList.remove('hidden');
+        Util.bringToFront(browserWindow, '.dialog');
     }
 
     function contentLoaded(req, txt) {
@@ -250,16 +251,16 @@
         if (!req) req = ' upload ';
         var file = eval(decodeURIComponent(e.data)).file;
         if (statusState == 'OK') {
-            dial.classList.remove('upload-error');
-            dial.classList.add('upload-ok');
+            dialogUpload.classList.remove('upload-error');
+            dialogUpload.classList.add('upload-ok');
         } else {
-            dial.classList.remove('upload-ok');
-            dial.classList.add('upload-error');
+            dialogUpload.classList.remove('upload-ok');
+            dialogUpload.classList.add('upload-error');
         }
-        dial.classList.remove('hidden');
-        dial[txt] = file + req + statusState + ' !';
+        dialogUpload.classList.remove('hidden');
+        dialogUpload[txt] = file + req + statusState + ' !';
         setTimeout(function() {
-            dial.classList.add('hidden');
+            dialogUpload.classList.add('hidden');
         }, 5000);
     }
 
@@ -291,25 +292,6 @@
         return item;
     }
 
-    function cloneSession(session) {
-        var s = new EditSession(session.getDocument(), session.getMode());
-        // Both session should use the same undo manager. Well, actually, shouldn't
-        // the undo manager live on the documnet?!?
-        s.setUndoManager(session.getUndoManager());
-        // Overwrite the default $informUndoManager function such that new delas
-        // aren't added to the undo manager from the new and the old session.
-        s.$informUndoManager = lang.deferredCall(function() {
-            s.$deltas = [];
-        });
-        // Copy over 'settings' from the session.
-        s.setUseSoftTabs(session.getUseSoftTabs());
-        s.setTabSize(session.getTabSize());
-        s.setUseWrapMode(session.getUseWrapMode());
-        s.setWrapLimitRange(session.$wrapLimitRange.min, session.$wrapLimitRange.max);
-        // TODO: There might be more settings, but for now I'm fine with that.
-        return s;
-    }
-
     function testSQLQuery() {
         if (!tabs.getSelected()) return;
         var isSQL = tabs.getSelected().getAttribute('data-file').indexOf('sql');
@@ -327,6 +309,7 @@
                 content.innerHTML = e.responseText;
                 content.scrollTop = 0;
                 sqlWindow.classList.remove('hidden');
+                Util.bringToFront(sqlWindow, '.dialog');
             });
         }
     }
@@ -338,10 +321,10 @@
             el.className = 'icon full-screen';
         }
     };
-    WDE.toggleBrowseDialog = function(path, enableHide) {
+    WDE.toggleBrowserDialog = function(path, enableHide) {
         if (typeof path === 'undefined') path = currentPath[txt].replace(origin, '');
-        if (!dialog.classList.contains('hidden') && enableHide) {
-            dialog.classList.add('hidden');
+        if (!browserWindow.classList.contains('hidden') && enableHide) {
+            browserWindow.classList.add('hidden');
             if (tabs.getSelected()) setCurrent(tabs.getSelected().getAttribute('data-path'), '');
             return;
         }
@@ -472,6 +455,7 @@
     WDE.toggleHelperWindow = function() {
         if (helpWindow.classList.contains('hidden')) {
             helpWindow.classList.remove('hidden');
+            Util.bringToFront(helpWindow, '.dialog');
         } else {
             helpWindow.classList.add('hidden');
         }
@@ -481,22 +465,23 @@
         if (base) origin = origin + '/' + base;
         tabHolder = document.querySelector('.tab-holder');
         tabHolder.addEventListener('click', tabHolderHandler, false);
-        dial = document.querySelector('.dialog-upload');
-        dialog = document.querySelector('#browse-dialog');
+        dialogUpload = document.querySelector('.dialog-upload');
+        browserWindow = document.querySelector('#browser-window');
         helpWindow = document.querySelector('#help-window');
         sqlWindow = document.querySelector('#sql-window');
         currentPath = document.querySelector('#current-path');
-        new Util.movable().Init('#browse-dialog', 'body', '#browse-dialog h3');
-        new Util.movable().Init('#help-window', 'body', '#help-window h3');
-        dialog.querySelector('.dialog-content').addEventListener('click', function(e) {
+        new Util.movable().Init('#browser-window', 'body', '#browser-window h3', '#browser-window .grip');
+        new Util.movable().Init('#help-window', 'body', '#help-window h3', '#help-window .grip');
+        new Util.movable().Init('#sql-window', 'body', '#sql-window h3', '#sql-window .grip');
+        browserWindow.querySelector('.dialog-content').addEventListener('click', function(e) {
             switch (e.target.className) {
                 case 'navigator':
                     var paths = e.target.getAttribute('data-path').split('/');
                     var path = e.target[txt] == '..' ? '' : paths.slice(0, paths.length - 1).join('/');
-                    WDE.toggleBrowseDialog(path, false);
+                    WDE.toggleBrowserDialog(path, false);
                     break;
                 case 'folder':
-                    WDE.toggleBrowseDialog(e.target.getAttribute('data-path') + '/' + e.target[txt], false);
+                    WDE.toggleBrowserDialog(e.target.getAttribute('data-path') + '/' + e.target[txt], false);
                     break;
                 case 'dialog-content':
                     break;
@@ -545,7 +530,7 @@
                         break;
                     case keys.TOGGLE_BROWSE_DIALOG:
                         e.preventDefault();
-                        WDE.toggleBrowseDialog(undefined, true);
+                        WDE.toggleBrowserDialog(undefined, true);
                         break;
                     case keys.NEXT_TAB:
                         e.preventDefault();

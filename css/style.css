@@ -1,85 +1,86 @@
-@import "http://fonts.googleapis.com/css?family=Source+Code+Pro|Roboto";
+@import"http://fonts.googleapis.com/css?family=Source+Code+Pro|Roboto";
 
-body{
+body {
     top:0;
     width:100%;
     height:100%;
     position:absolute;
-    background: #2F3129;
+    background:#2f3129;
     overflow:hidden;
     font:14px/normal source-code-pro,Roboto,Monaco,Menlo,"Ubuntu Mono",Consolas,monospace
 }
 
-body pre{
+body pre {
     top:0;
     height:calc(100% - 92px);
-    margin: 0px 1px 0px 1px;
+    margin:0 1px;
     position:relative;
-    border:solid #64665f 1px
+    border:solid #64665f 1px;
+    border-radius:3px
 }
 
-.header,.footer{
-    width:calc(100% - 14px);
+.header,.footer {
+    width: calc(100% - 14px);
     z-index:9;
     display:inline-block;
     line-height:32px;
     position:relative;
-    background:#2F3129;
-    color:#8F908A;
+    background:#2f3129;
+    color:#8f908a;
     padding:7px;
     font-size:20px;
     font-weight:700;
     height:32px
 }
 
-.header h3{
+.header h3 {
     float:left;
     display:inline-block
 }
 
-.footer{
+.footer {
     padding:7px;
     font-weight:400
 }
 
-.tab-holder{
+.tab-holder {
     list-style:none;
     display:inline-flex;
-    max-width: calc(100% - 350px);
+    max-width:calc(100% - 350px);
     height:32px;
     margin:7px 20px 0
 }
 
-.tab-holder li{
-    text-overflow: ellipsis;
+.tab-holder li {
+    text-overflow:ellipsis;
     position:relative;
     overflow:hidden;
     cursor:default;
     padding:0 25px 0 5px;
-    margin: 0 0 0 5px;
+    margin:0 0 0 5px;
     width:100px;
     font-weight:100;
     font-size:14px;
     border:solid #64665f 1px;
     border-bottom:0;
-    border-radius: 8px 8px 0 0;
-    transition:background-color 0.2s,width .2s linear
+    border-radius:3px 3px 0 0;
+    transition:background-color .2s,width .2s linear
 }
 
-.tab-holder li:hover{
+.tab-holder li:hover {
     color:#fff
 }
 
-.tab-holder .selected{
-    height: 31px;
+.tab-holder .selected {
+    height:31px;
     width:150px;
     color:#fff;
-    background-color:#272822;
-    border-bottom: solid rgb(39, 40, 34) 1px;
-    white-space:nowrap
+    border-bottom:solid #272822 1px;
+    white-space:nowrap;
+    background:#272822
 }
 
-.tab-holder .selected::after{
+.tab-holder .selected::after {
     cursor:pointer;
     position:absolute;
     top:8px;
@@ -87,14 +88,13 @@ body pre{
     content:url(icons/cross.png)
 }
 
-.tab-holder .add-new{
+.tab-holder .add-new {
     overflow:visible;
     width:15px;
-    border-color:transparent!important;
-    background-color:transparent!important
+    border-color:transparent!important
 }
 
-.tab-holder .add-new::before{
+.tab-holder .add-new::before {
     cursor:pointer;
     position:relative;
     top:3px;
@@ -102,76 +102,79 @@ body pre{
     content:url(icons/add.png)
 }
 
-.dialog{
-    color:#8F908A;
+.dialog {
+    color:#8f908a;
     overflow:hidden;
     z-index:10;
-    background-color:#2f3129;
     position:absolute;
     top:20%;
     height:50%;
     left:25%;
     width:50%;
     padding:5px;
-    transition:opacity 0.2s,visibility .2s linear
+    min-width:200px;
+    min-height:150px;
+    transition:opacity .2s,visibility .2s linear;
+    background:#2f3129
 }
-#help-window{
-    z-index: 9;
-}
-#sql-window{
-    z-index:8;
+
+
+#sql-window {
     top:10%;
     height:80%;
     left:10%;
-    width:80%;
-}
-.login{
-    top:calc(50% - 155px);
-    max-width:600px;
-    position:relative;
-    min-width:300px;
-    height:270px;
-    margin-left:auto;
-    margin-right:auto;
-    left:inherit
+    width:80%
 }
 
-.login input,.login button,.login select{
+.login {
+    top:calc(50% - 150px);
+    width:500px;
+    height:270px;
+    left:calc(50% - 250px)
+}
+
+.login input,.login button,.login select {
     color:#fff;
     background:#202020;
     outline:0;
     border:solid 2px #2f3129;
     padding:5px 15px
 }
-.login-message{
-    left: 0;
-    position: absolute;
-    text-align: center;
+
+.login-message {
+    left:0;
+    position:absolute;
+    text-align:center;
     font-size:12px;
-    width: 100%;
-}
-.login-link{
-    z-index: 1;
-    position: absolute;
-    right: 0;
-    display: inline-block;
-    margin-left: 10px;
-    font-size:12px;
-    font-style: italic;
-    font-style: oblique;
-}
-.login-link img{
-    margin-left: 5px;
-    float: right;
-    height: 24px;
-    margin-top: 4px;
-}
-.header form{
-    right:0;
-    height:32px
+    width:100%
 }
 
-.header form button{
+.login-link {
+    position:absolute;
+    right:0;
+    display:inline-block;
+    margin-left:10px;
+    font-size:12px;
+    font-style:italic;
+    font-style:oblique
+}
+
+.login-link img {
+    margin-left:5px;
+    float:right;
+    height:24px;
+    margin-top:4px
+}
+
+.header form {
+    right:0;
+    height:32px;
+    display:none;
+    position:inherit;
+    float:right
+}
+
+.header form button {
     display:inherit;
     position:inherit;
     height:100%;
@@ -179,242 +182,236 @@ body pre{
     margin:0;
     padding:0;
     color:transparent;
-    background-color:transparent;
     outline:0
 }
 
-.header form{
-    display:none;
-    position:inherit;
-    float:right
-}
-
-.dialog h3{
+.dialog h3 {
     font-size:16px;
     position:relative;
     cursor:move;
     line-height:32px;
     margin:5px;
-    color:#8F908A
+    color:#8f908a
 }
 
-.dialog .dialog-content{
-    background-color:#272822;
+.dialog .dialog-content {
     top:45px;
     position:absolute;
     margin:5px;
     overflow:auto;
     bottom:0;
     right:0;
-    left:0
+    left:0;
+    background:#272822
 }
 
-.dialog-content ul{
+.dialog-content ul {
     padding:0;
     margin:0;
     width:calc(100% - 10px);
     list-style:none
 }
 
-.dialog-content ul li a{
+.dialog-content ul li a {
     padding:5px;
     cursor:default;
     width:100%;
     display:block
 }
 
-.dialog-content ul li a:hover{
+.dialog-content ul li a:hover {
     background:#49483e
 }
 
-.folder{
-    color:#8F908A;
+.folder {
+    color:#8f908a;
     font-weight:700
 }
 
-.folder::before,.file-sql::before,.file-html::before,.file-text::before,.file-js::before,.file-php::before,.file-css::before,.file-img::before,.file-pdf::before,.file-xls::before,.file-doc::before,
-.file-zip::before,.file-audio::before,.file-video::before,.file-unknown::before,.navigator::before{
+.folder::before,.file-sql::before,.file-html::before,.file-text::before,.file-js::before,.file-php::before,.file-css::before,.file-img::before,.file-pdf::before,
+.file-xls::before,.file-doc::before,.file-zip::before,.file-audio::before,.file-video::before,.file-unknown::before,.navigator::before {
     vertical-align:middle;
     position:relative;
-    margin-right:10px;
+    margin-right:10px
 }
 
-.navigator::before{
+.navigator::before {
     content:url(icons/folder_go.png)
 }
 
-.folder::before{
+.folder::before {
     content:url(icons/folder.png)
 }
 
-.delete:before{
+.delete:before {
     padding:2px;
     cursor:pointer;
     float:right;
     content:url(icons/cross.png)
 }
 
-.file-execute::before{
+.file-execute::before {
     padding:2px;
     cursor:pointer;
     float:right;
     content:url(icons/eye.png)
 }
 
-.file-sql::before{
+.file-sql::before {
     content:url(icons/sql.png)
 }
 
-.file-html::before{
+.file-html::before {
     content:url(icons/html.png)
 }
 
-.file-text::before{
+.file-text::before {
     content:url(icons/script.png)
 }
 
-.file-js::before{
+.file-js::before {
     content:url(icons/script_code.png)
 }
 
-.file-php::before{
+.file-php::before {
     content:url(icons/page_white_php.png)
 }
 
-.file-css::before{
+.file-css::before {
     content:url(icons/css.png)
 }
 
-.file-img::before{
+.file-img::before {
     content:url(icons/image.png)
 }
 
-.file-pdf::before{
+.file-pdf::before {
     content:url(icons/page_white_acrobat.png)
 }
 
-.file-xls::before{
+.file-xls::before {
     content:url(icons/page_excel.png)
 }
 
-.file-doc::before{
+.file-doc::before {
     content:url(icons/page_word.png)
 }
 
-.file-zip::before{
+.file-zip::before {
     content:url(icons/page_white_zip.png)
 }
 
-.file-audio::before{
+.file-audio::before {
     content:url(icons/music.png)
 }
 
-.file-video::before{
+.file-video::before {
     content:url(icons/camera.png)
 }
 
-.file-unknown::before{
+.file-unknown::before {
     content:url(icons/page_white.png)
 }
 
-.sh-0{
+.sh-0 {
     border:1px solid #eee
 }
 
-.sh-1{
-    box-shadow:0 2px 10px 0 rgba(0,0,0,0.16),0 2px 5px 0 rgba(0,0,0,0.26)
+.sh-1 {
+    box-shadow: 2px 2px 10px 2px rgba(0,0,0,.16),2px 2px 5px 2px rgba(0,0,0,.26);}
+
+.sh-2 {
+    box-shadow:0 6px 20px 0 rgba(0,0,0,.19),0 8px 17px 0 rgba(0,0,0,.2)
 }
 
-.sh-2{
-    box-shadow:0 6px 20px 0 rgba(0,0,0,0.19),0 8px 17px 0 rgba(0,0,0,0.2)
+.sh-3 {
+    box-shadow:0 17px 50px 0 rgba(0,0,0,.19),0 12px 15px 0 rgba(0,0,0,.24)
 }
 
-.sh-3{
-    box-shadow:0 17px 50px 0 rgba(0,0,0,0.19),0 12px 15px 0 rgba(0,0,0,0.24)
+.sh-4 {
+    box-shadow:0 25px 55px 0 rgba(0,0,0,.21),0 16px 28px 0 rgba(0,0,0,.22)
 }
 
-.sh-4{
-    box-shadow:0 25px 55px 0 rgba(0,0,0,0.21),0 16px 28px 0 rgba(0,0,0,0.22)
+.sh-5 {
+    box-shadow:0 40px 77px 0 rgba(0,0,0,.22),0 27px 24px 0 rgba(0,0,0,.2)
 }
 
-.sh-5{
-    box-shadow:0 40px 77px 0 rgba(0,0,0,0.22),0 27px 24px 0 rgba(0,0,0,0.2)
-}
-
-.icon{
-    color:#8F908A;
+.icon {
+    color:#8f908a;
     margin-left:2px;
     float:right;
     cursor:pointer;
-    background:transparent
+    background:none
 }
 
-.icon:hover{
+.icon:hover {
     background:#49483e
 }
 
-.icon:active{
+.icon:active {
     background:#272822
 }
 
-.normal-screen::before,.full-screen::before,.logout::before,.save-file::before,.copy-file::before,.paste-file::before,.open-folder::before{
+.normal-screen::before,.full-screen::before,.logout::before,.save-file::before,.copy-file::before,.paste-file::before,.open-folder::before {
     height:32px;
     vertical-align:middle;
     position:relative;
-    padding:4px 8px;
+    padding:4px 8px
 }
 
-.open-folder::before{
+.open-folder::before {
     content:url(icons/folder_magnify.png)
 }
 
-.normal-screen::before{
+.normal-screen::before {
     content:url(icons/arrow_in.png)
 }
-.full-screen::before{
+
+.full-screen::before {
     content:url(icons/arrow_out.png)
 }
 
-.logout::before{
+.logout::before {
     content:url(icons/door_out.png)
 }
 
-.save-file::before{
+.save-file::before {
     content:url(icons/script_save.png)
 }
 
-.copy-file::before{
+.copy-file::before {
     content:url(icons/page_copy.png)
 }
 
-.paste-file::before{
+.paste-file::before {
     content:url(icons/page_paste.png)
 }
 
-.create-new-file:before,.upload-file:before,.create-new-folder:before,.close-dialog:before{
+.create-new-file:before,.upload-file:before,.create-new-folder:before,.close-dialog:before {
     top:4px;
     height:32px;
     vertical-align:middle;
     position:relative;
-    padding:4px 8px;
+    padding:4px 8px
 }
-.create-new-file:before{
+
+.create-new-file:before {
     content:url(icons/script_add.png)
 }
 
-.upload-file:before{
+.upload-file:before {
     content:url(icons/script_go.png)
 }
 
-.create-new-folder:before{
+.create-new-folder:before {
     content:url(icons/folder_add.png)
 }
 
-.close-dialog:before{
+.close-dialog:before {
     content:url(icons/cross.png)
 }
 
-#current-path{
+#current-path {
     font-size:14px;
     font-weight:400;
     text-decoration:underline;
@@ -422,81 +419,100 @@ body pre{
     color:#8f908a
 }
 
-.dialog-upload{
+.dialog-upload {
     display:inline-flex;
-    background-color:#2f3129;
     color:#fff;
     position:absolute;
     right:0;
     bottom:0;
     margin:10px 35px 75px 10px;
     padding:10px;
-    z-index:10;
+    z-index:9999;
     line-height:1.9;
-    transition:all .2s linear
+    transition:all .2s linear;
+    background:#2f3129
 }
 
-.upload-ok::after{
+.upload-ok::after {
     position:relative;
     top:3px;
     margin-left:10px;
     content:url(icons/accept.png)
 }
-.upload-error::after{
+
+.upload-error::after {
     position:relative;
     top:3px;
     margin-left:10px;
     content:url(icons/exclamation.png)
 }
-.hidden{
-    opacity:0; 
+
+.hidden {
+    opacity:0;
     visibility:hidden
 }
 
-.text-center{
+.text-center {
     text-align:center
 }
+
 table.hovertable {
-    font-family: verdana,arial,sans-serif;
-    font-size:11px;
-    color:#333333;
-    border-width: 1px;
-    border-color: #999999;
-    border-collapse: collapse;
-    margin: auto;
+    color:#333;
+    border-width:1px;
+    border-color:#999;
+    border-collapse:collapse;
+    margin:auto;
+    font:11px verdana,arial,sans-serif
 }
+
 table.hovertable th {
-    background-color: #2F3129;
-    border-width: 1px;
-    padding: 8px;
-    border-style: solid;
-    border-color: #8F908A;
-    color: whitesmoke;
-    font-weight: bold;
+    border-width:1px;
+    padding:8px;
+    border-style:solid;
+    border-color:#8f908a;
+    color:#f5f5f5;
+    font-weight:700;
+    background:#2f3129
 }
+
 table.hovertable tr {
-    background-color: #262721;
+    background:#262721
 }
+
 table.hovertable tbody tr:hover {
-    background-color: #2F3129;
+    background:#2f3129
 }
+
 table.hovertable td {
-    border-width: 1px;
-    padding: 8px;
-    border-style: solid;
-    border-color: #8F908A;
-    color: white;
+    border-width:1px;
+    padding:8px;
+    border-style:solid;
+    border-color:#8f908a;
+    color:#fff
 }
-::-webkit-scrollbar{
+
+.grip {
+    position:absolute;
+    width:0;
+    height:0;
+    border-style:solid;
+    border-width: 0 0 20px 20px;
+    border-color: transparent transparent rgba(47, 49, 41, 1);
+    bottom:0;
+    right:0;
+    cursor:nw-resize
+}
+
+::-webkit-scrollbar {
     width:5px;
     height:5px
 }
 
-::-webkit-scrollbar-track{
+::-webkit-scrollbar-track {
     background:#202020
 }
 
-::-webkit-scrollbar-thumb{
+::-webkit-scrollbar-thumb {
     border-radius:0;
-    background:#8F908A
+    background:#8f908a
 }
