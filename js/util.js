@@ -120,6 +120,7 @@
             return this.isFullScreen;
         },
         goFullScreen: function(selector) {
+            var element;
             if (typeof selector != 'object') {
                 element = document.querySelector(selector);
             } else {
