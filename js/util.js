@@ -295,10 +295,10 @@
             parentElement = document.querySelector(parent);
             header = dialog.querySelector(drag);
             grip = dialog.querySelector(resizeGrip);
-            header.addEventListener('mousedown', mouseDownForMoveEvent);
-            parentElement.addEventListener('mouseup', mouseUpEvent);
-            parentElement.addEventListener('mousemove', mouseMoveEvent, true);
-            if (grip) grip.addEventListener('mousedown', mouseDownEventResize, true);
+            header.addEventListener('mousedown', mouseDownForMoveEvent, false);
+            parentElement.addEventListener('mouseup', mouseUpEvent, false);
+            parentElement.addEventListener('mousemove', mouseMoveEvent, false);
+            if (grip) grip.addEventListener('mousedown', mouseDownEventResize, false);
         };
         var destroy = function() {
             header.removeEventListener('mousedown', mouseDownForMoveEvent);

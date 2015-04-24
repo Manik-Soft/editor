@@ -3,7 +3,7 @@
     WDE.Version = {
         Author: 'Tóth András',
         Name: 'Web Dev Editor - WDE',
-        Version: '1.3.0 beta',
+        Version: '1.4.0 beta',
         Licence: 'MIT'
     };
     if (!window.location.origin) {
@@ -182,7 +182,7 @@
         [].forEach.call(data, function(item) {
             var str = '';
             var li = document.createElement('li');
-            if (item.type != 'navigator') str = '<span class="delete" onclick="WDE.deleteFile(event);"></span>';
+            if (item.type != 'navigator') str = '<span class="delete" onclick="WDE.deleteFile(event);"></span><span class="create-zip" onclick="WDE.zipFile(event);"></span>';
             if (item.type != 'navigator' && viewableFiles.split(',').indexOf(item.type) !== -1) str += '<span class="file-execute" onclick="WDE.fileExecute(event);"></span>';
             li.innerHTML = '<a data-path="' + item.path + '" class="' + item.type + '">' + item.name + str + '</a>';
             ul.appendChild(li);
@@ -276,7 +276,7 @@
             var repeat = Array.prototype.filter.call(ul.children, function(b) {
                 return b.children[0][txt] == list[i].className.replace('icon', '');
             });
-            if (repeat.length === 0) createAndAppendTo('li', '<a>' + list[i].className.replace('icon', '') + '<span class="' + list[i].className + '"></span></a>', ul);
+            if (repeat.length === 0 && list[i].className != 'separator') createAndAppendTo('li', '<a>' + list[i].className.replace('icon', '') + '<span class="' + list[i].className + '"></span></a>', ul);
         }
         createAndAppendTo('li', '<a style="color:white;">Keymap:</a>', ul);
         for (i in keys) {
@@ -425,8 +425,28 @@
         e.stopPropagation();
         var el = e.target.parentElement;
         if (viewableFiles.split(',').indexOf(el.className) !== -1) {
-            window.open([origin, el.getAttribute('data-path'), el[txt]].join('/'));
+            window.open(origin + [el.getAttribute('data-path'), el[txt]].join('/'));
         }
+    };
+    WDE.zipFile = function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var el = e.target.parentElement;
+        new Util.Ajax().POST('com.php', {
+            params: {
+                order: 'create_zip',
+                path: el.getAttribute('data-path'),
+                file: el[txt]
+            }
+        }, function(e) {
+            if (e.statusText == 'OK' && !isNaN(Number(e.responseText))) {
+                e.statusState = 'OK';
+                showHideDialog(e, ' zipped ');
+            } else {
+                e.statusState = 'Failed';
+                showHideDialog(e, ' zipped ');
+            }
+        }, true);
     };
     WDE.copyFile = function() {
         if (!tabs.getSelected()) return;

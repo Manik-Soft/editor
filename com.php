@@ -45,9 +45,9 @@ if ($p->order == 'delete') {
 }
 if ($p->order == 'test_sql') {
     $sql = $_SESSION['user']['SQL'];
-    if($sql['conn'] == ''){
-    	echo ('Database connection is not configured!');
-    	return;
+    if ($sql['conn'] == '') {
+        echo ('Database connection is not configured!');
+        return;
     }
     require_once ('sql_func_proc/sqlfuncproc.php');
     $func = SqlFuncProc::getInstance($sql['conn'], $sql['user'], $sql['pass']);
@@ -58,7 +58,11 @@ if ($p->order == 'test_sql') {
         echo $func->getHTMLtable($data, '', 'hovertable');
     }
 }
-
+if ($p->order == 'create_zip') {
+    $rootPath = $root . str_replace('.', '', $p->path) . DIRECTORY_SEPARATOR . $p->file;
+    $zipname = is_dir($rootPath) ? dirname($rootPath) . DIRECTORY_SEPARATOR . basename($rootPath) . '.zip' : dirname($rootPath) . DIRECTORY_SEPARATOR . basename($rootPath) . '.zip';
+    Zip($rootPath, $zipname);
+}
 function delete_folder($folder) {
     $glob = glob($folder);
     foreach ($glob as $g) {
@@ -116,4 +120,43 @@ function get_type($ext) {
     if (in_array($ext, explode(',', 'bmp,jpeg,jpg,gif,tiff,png,pcx,emf,rle,dib,webp,ico,svg'))) return 'file-img';
     if (in_array($ext, explode(',', 'zip,tgz,bgz,gz,tz,rar'))) return 'file-zip';
     return 'file-unknown';
+}
+function Zip($source, $destination, $include_dir = true) {
+    if (!extension_loaded('zip') || !file_exists($source)) {
+        return false;
+    }
+    if (file_exists($destination)) {
+        unlink($destination);
+    }
+    $zip = new ZipArchive();
+    if (!$zip->open($destination, ZIPARCHIVE::CREATE)) {
+        return false;
+    }
+    $source = str_replace('\\', DIRECTORY_SEPARATOR, realpath($source));
+    if (is_dir($source) === true) {        
+        $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($source), RecursiveIteratorIterator::SELF_FIRST);
+        if ($include_dir) {
+            $arr = explode("/", $source);
+            $maindir = $arr[count($arr) - 1];
+            $source = "";
+            for ($i = 0; $i < count($arr) - 1; $i++) {
+                $source.= DIRECTORY_SEPARATOR . $arr[$i];
+            }
+            $source = substr($source, 1);
+            $zip->addEmptyDir($maindir);
+        }
+        foreach ($files as $file) {
+            $file = str_replace('\\', DIRECTORY_SEPARATOR, $file);
+            if (in_array(substr($file, strrpos($file, DIRECTORY_SEPARATOR) + 1), array('.', '..'))) continue;
+            $file = realpath($file);
+            if (is_dir($file) === true) {
+                $zip->addEmptyDir(str_replace($source . DIRECTORY_SEPARATOR, '', $file . DIRECTORY_SEPARATOR));
+            } else if (is_file($file) === true) {
+                $zip->addFromString(str_replace($source . DIRECTORY_SEPARATOR, '', $file), file_get_contents($file));
+            }
+        }
+    } else if (is_file($source) === true) {
+        $zip->addFromString(basename($source), file_get_contents($source));
+    }
+    return $zip->close();
 }

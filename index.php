@@ -63,38 +63,39 @@ if (isset($_SESSION['user'])) {
         <ul class="tab-holder">
             <li class="add-new"></li>
         </ul>
-        <span class="icon logout" onclick="document.querySelector('button').click()"></span>
-        <span class="icon full-screen" onclick="WDE.toggleFullScreen(this);"></span>
-        <span class="icon open-folder" onclick="WDE.toggleBrowserDialog(undefined,true);"></span>
+        <span class="icon logout" onclick="document.querySelector('button').click()" title="logout"></span>
+        <span class="icon full-screen" onclick="WDE.toggleFullScreen(this);" title="full screen"></span>
+        <span class="icon open-folder" onclick="WDE.toggleBrowserDialog(undefined,true);" title="browser window"></span>
         <form action="." method="post"><button type="submit" name="logout"></button></form>
     </div>
     <pre></pre>
     <div class="footer no-select sh-1">
         <a id="current-path" target="_blank"></a>
-        <span class="icon save-file" onclick="WDE.saveFile();"></span>
-        <span class="icon copy-file" onclick="WDE.copyFile();"></span>
-        <span class="icon paste-file" onclick="WDE.pasteFile();"></span>
+        <span class="icon save-file" onclick="WDE.saveFile();" title="save file"></span>
+        <span class="icon copy-file" onclick="WDE.copyFile();" title="copy file"></span>
+        <span class="icon paste-file" onclick="WDE.pasteFile();" title="paste file"></span>
+        <span class="separator"></span>
     </div>
     <div class="dialog sh-2 no-select hidden" id="browser-window">
         <h3>Browser Window
-            <span class="icon close-dialog" onclick="WDE.toggleBrowserDialog(undefined, true);"></span>
-            <span class="icon create-new-file" onclick="WDE.createNewFile();"></span>
-            <span class="icon create-new-folder" onclick="WDE.createNewFolder();"></span>
-            <span class="icon upload-file" onclick="setTimeout(WDE.uploadFile());"></span>
+            <span class="icon close-dialog" onclick="WDE.toggleBrowserDialog(undefined, true);" title="close"></span>
+            <span class="icon create-new-file" onclick="WDE.createNewFile();" title="new file"></span>
+            <span class="icon create-new-folder" onclick="WDE.createNewFolder();" title="new folder"></span>
+            <span class="icon upload-file" onclick="setTimeout(WDE.uploadFile());" title="upload"></span>
         </h3>
         <div class="dialog-content"></div>
         <div class="grip"></div>
     </div>
     <div class="dialog sh-2 no-select hidden" id="help-window">
         <h3>Help Window
-            <span class="icon close-dialog" onclick="WDE.toggleHelperWindow();"></span>
+            <span class="icon close-dialog" onclick="WDE.toggleHelperWindow();" title="close"></span>
         </h3>
         <div class="dialog-content"></div>
         <div class="grip"></div>
     </div>
     <div class="dialog sh-2 no-select hidden" id="sql-window">
         <h3>SQL Result Window
-            <span class="icon close-dialog" onclick="this.parentElement.parentElement.classList.add('hidden');"></span>
+            <span class="icon close-dialog" onclick="this.parentElement.parentElement.classList.add('hidden');" title="close"></span>
         </h3>
         <div class="dialog-content"></div>
         <div class="grip"></div>
@@ -129,7 +130,8 @@ else {
             <input type="password" name="pass" placeholder="Password"><br><br>
             <label>Choose Editor theme</label><br>
             <select id="ace-theme" size="1" name="ace-theme">
-                <optgroup label="Bright"><option value="ace/theme/chrome">Chrome</option>
+                <optgroup label="Bright">
+                	<option value="ace/theme/chrome">Chrome</option>
                     <option value="ace/theme/clouds">Clouds</option>
                     <option value="ace/theme/crimson_editor">Crimson Editor</option>
                     <option value="ace/theme/dawn">Dawn</option>

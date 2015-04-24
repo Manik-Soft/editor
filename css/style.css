@@ -5,7 +5,7 @@ body {
     width:100%;
     height:100%;
     position:absolute;
-    background:#2f3129;
+    background: #272822;
     overflow:hidden;
     font:14px/normal source-code-pro,Roboto,Monaco,Menlo,"Ubuntu Mono",Consolas,monospace
 }
@@ -34,6 +34,7 @@ body pre {
 }
 
 .header h3 {
+    line-height: 1.8;
     float:left;
     display:inline-block
 }
@@ -244,6 +245,7 @@ body pre {
 }
 
 .delete:before {
+    margin-left:2px;
     padding:2px;
     cursor:pointer;
     float:right;
@@ -251,10 +253,19 @@ body pre {
 }
 
 .file-execute::before {
+    margin-left:2px;
     padding:2px;
     cursor:pointer;
     float:right;
-    content:url(icons/eye.png)
+    content:url(icons/go.png)
+}
+
+.create-zip::before {
+    margin-left:2px;
+    padding:2px;
+    cursor:pointer;
+    float:right;
+    content:url(icons/zip.png)
 }
 
 .file-sql::before {
@@ -352,11 +363,24 @@ body pre {
     background:#272822
 }
 
-.normal-screen::before,.full-screen::before,.logout::before,.save-file::before,.copy-file::before,.paste-file::before,.open-folder::before {
+.normal-screen::before,.full-screen::before,.logout::before,.save-file::before,.copy-file::before,.paste-file::before,.open-folder::before,.mergely::before,
+.adminer::before, .js-beautify::before {
     height:32px;
     vertical-align:middle;
     position:relative;
     padding:4px 8px
+}
+
+.adminer::before {
+	content:url(icons/ems.png)
+}
+
+.mergely::before{
+    content:url(icons/mergely.png)
+}
+
+.js-beautify::before {
+	content:url(icons/jsbeautify.png)
 }
 
 .open-folder::before {
@@ -445,6 +469,14 @@ body pre {
     top:3px;
     margin-left:10px;
     content:url(icons/exclamation.png)
+}
+
+.separator{
+	margin-left: 2px;
+    width: 1px;
+    background: rgb(89, 90, 83);
+    float: right;
+    height: 100%;
 }
 
 .hidden {

@@ -21,6 +21,13 @@ Each user can be assigned:
 
 Version
 ----
+1.4.0 beta
+
+- Add new function, Create zip file from file or folder
+- Some invisible modification
+
+Version
+----
 1.3.0 beta
 
 - Scalable windows
