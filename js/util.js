@@ -263,21 +263,22 @@
         }
 
         function mouseMoveEvent(e) {
+            var mEvent = {};
             e.preventDefault();
             if (mouseDownForMove) {
-                e = defineEvent(e);
+                mEvent = defineEvent(e);
                 var prop = {
-                    top: (dialog.offsetTop + e.movementY).toString() + 'px',
-                    left: (dialog.offsetLeft + e.movementX).toString() + 'px'
+                    top: (dialog.offsetTop + mEvent.movementY).toString() + 'px',
+                    left: (dialog.offsetLeft + mEvent.movementX).toString() + 'px'
                 };
                 Util.extend(dialog.style, prop);
             }
             if (mouseDownForResize) {
-                e = defineEvent(e);
+                mEvent = defineEvent(e);
                 var padding = parseFloat(getComputedStyle(dialog).paddingLeft) + parseFloat(getComputedStyle(dialog).paddingRight);
                 var prop = {
-                    width: (dialog.offsetWidth - padding + e.movementX).toString() + 'px',
-                    height: (dialog.offsetHeight - padding + e.movementY).toString() + 'px'
+                    width: (dialog.offsetWidth - padding + mEvent.movementX).toString() + 'px',
+                    height: (dialog.offsetHeight - padding + mEvent.movementY).toString() + 'px'
                 };
                 Util.extend(dialog.style, prop);
             }
@@ -286,9 +287,10 @@
         }
 
         function defineEvent(e) {
-            e.movementX = e.movementX || e.mozMovementX || e.webkitMovementX || e.pageX - lastMovementX;
-            e.movementY = e.movementY || e.mozMovementY || e.webkitMovementY || e.pageY - lastMovementY;
-            return e;
+            var mEvent = {};
+            mEvent.movementX = e.movementX || e.mozMovementX || e.webkitMovementX || e.pageX - lastMovementX;
+            mEvent.movementY = e.movementY || e.mozMovementY || e.webkitMovementY || e.pageY - lastMovementY;
+            return mEvent;
         }
         var init = function(item, parent, drag, resizeGrip) {
             dialog = document.querySelector(item);

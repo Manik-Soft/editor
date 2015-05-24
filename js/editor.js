@@ -3,7 +3,7 @@
     WDE.Version = {
         Author: 'Tóth András',
         Name: 'Web Dev Editor - WDE',
-        Version: '1.4.0 beta',
+        Version: '2.0.0',
         Licence: 'MIT'
     };
     if (!window.location.origin) {
@@ -26,8 +26,8 @@
             EXECUTE_SQL: 'R'.charCodeAt(0)
         };
     })();
-    var viewableFiles = 'file-audio,file-video,file-img,file-xls,file-doc,file-pdf,file-zip',
-        viewableAndEditable = 'svg,sql';
+    var viewableFiles = 'wde-file-word,wde-file-excel,wde-file-image,wde-file-pdf,wde-file-zip,wde-file-music,wde-file-video',
+        viewableAndEditable = 'svg';
     var txt = ('innerText' in HTMLElement.prototype) ? 'innerText' : 'textContent';
     var browserWindow, sqlWindow, currentPath, theme, modelist, helpWindow,
         dialogUpload, tabHolder,
@@ -182,9 +182,11 @@
         [].forEach.call(data, function(item) {
             var str = '';
             var li = document.createElement('li');
-            if (item.type != 'navigator') str = '<span class="delete" onclick="WDE.deleteFile(event);"></span><span class="create-zip" onclick="WDE.zipFile(event);"></span>';
-            if (item.type != 'navigator' && viewableFiles.split(',').indexOf(item.type) !== -1) str += '<span class="file-execute" onclick="WDE.fileExecute(event);"></span>';
-            li.innerHTML = '<a data-path="' + item.path + '" class="' + item.type + '">' + item.name + str + '</a>';
+            if (item.type != 'wde-folder-move') str = '<span class="wde-delete" onclick="WDE.deleteFile(event);"></span><span class="wde-zip-box" onclick="WDE.zipFile(event);"></span>';
+            if (item.type != 'wde-folder-move' && viewableFiles.split(',').indexOf(item.type) !== -1){
+                str += '<span class="wde-navigation" onclick="WDE.fileExecute(event);"></span>';
+            }
+            li.innerHTML = '<a data-path="' + item.path + '"><span class="' + item.type + '"></span>' + item.name + str + '</a>';
             ul.appendChild(li);
         });
         browserWindow.children[1].innerHTML = '';
@@ -274,9 +276,11 @@
         createAndAppendTo('li', '<a style="color:white;">Icons:</a>', ul);
         for (var i = 0; i < list.length; i++) {
             var repeat = Array.prototype.filter.call(ul.children, function(b) {
-                return b.children[0][txt] == list[i].className.replace('icon', '');
+                return b.innerHTML.indexOf(list[i].className.replace('icon ', '')) !== -1 ? true : false;
             });
-            if (repeat.length === 0 && list[i].className != 'separator') createAndAppendTo('li', '<a>' + list[i].className.replace('icon', '') + '<span class="' + list[i].className + '"></span></a>', ul);
+            if (repeat.length === 0 && list[i].className != 'separator') {
+                createAndAppendTo('li', '<a>' + list[i].className.replace('icon wde-', '') + '<span style="float:right;margin-right:3px;" class="' + list[i].className.replace('icon ', '') + '"></span></a>', ul);
+            }
         }
         createAndAppendTo('li', '<a style="color:white;">Keymap:</a>', ul);
         for (i in keys) {
@@ -310,15 +314,15 @@
                 content.scrollTop = 0;
                 sqlWindow.classList.remove('hidden');
                 Util.bringToFront(sqlWindow, '.dialog');
-            });
+            }, true);
         }
     }
     WDE.toggleFullScreen = function(el) {
         Util.fullScreen.toggleFullScreen('body');
-        if (Util.fullScreen.isFullScreen) {
-            el.className = 'icon normal-screen';
+        if (!Util.fullScreen.isFullScreen) {
+            el.className = 'icon wde-fullscreen';
         } else {
-            el.className = 'icon full-screen';
+            el.className = 'icon wde-fullscreen-exit';
         }
     };
     WDE.toggleBrowserDialog = function(path, enableHide) {
@@ -424,7 +428,7 @@
         e.preventDefault();
         e.stopPropagation();
         var el = e.target.parentElement;
-        if (viewableFiles.split(',').indexOf(el.className) !== -1) {
+        if (viewableFiles.split(',').indexOf(el.children[0].className) !== -1) {
             window.open(origin + [el.getAttribute('data-path'), el[txt]].join('/'));
         }
     };
@@ -494,22 +498,23 @@
         new Util.movable().Init('#help-window', 'body', '#help-window h3', '#help-window .grip');
         new Util.movable().Init('#sql-window', 'body', '#sql-window h3', '#sql-window .grip');
         browserWindow.querySelector('.dialog-content').addEventListener('click', function(e) {
-            switch (e.target.className) {
-                case 'navigator':
-                    var paths = e.target.getAttribute('data-path').split('/');
-                    var path = e.target[txt] == '..' ? '' : paths.slice(0, paths.length - 1).join('/');
+            var target = e.target.children[0] ? e.target : e.target.parentElement;
+            switch (target.children[0].className) {
+                case 'wde-folder-move':
+                    var paths = target.getAttribute('data-path').split('/');
+                    var path = target[txt] == '..' ? '' : paths.slice(0, paths.length - 1).join('/');
                     WDE.toggleBrowserDialog(path, false);
                     break;
-                case 'folder':
-                    WDE.toggleBrowserDialog(e.target.getAttribute('data-path') + '/' + e.target[txt], false);
+                case 'wde-folder':
+                    WDE.toggleBrowserDialog(target.getAttribute('data-path') + '/' + target[txt], false);
                     break;
-                case 'dialog-content':
+                case '':
                     break;
                 default:
-                    if (viewableFiles.split(',').indexOf(e.target.className) !== -1 && viewableAndEditable.split(',').indexOf(e.target[txt].split('.')[1]) == -1) {
+                    if (viewableFiles.split(',').indexOf(target.children[0].className) !== -1 && viewableAndEditable.split(',').indexOf(target[txt].split('.')[1]) == -1) {
                         break;
                     }
-                    var exists = tabs.getByPathAndFile(e.target.getAttribute('data-path'), e.target[txt]);
+                    var exists = tabs.getByPathAndFile(target.getAttribute('data-path'), target[txt]);
                     if (exists) {
                         tabs.changeSelected(exists);
                         break;
@@ -518,8 +523,8 @@
                     new Util.Ajax().POST('com.php', {
                         params: {
                             order: 'load_file',
-                            path: e.target.getAttribute('data-path'),
-                            file: e.target[txt]
+                            path: target.getAttribute('data-path'),
+                            file: target[txt]
                         }
                     }, contentLoaded, true);
             }

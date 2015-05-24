@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="animated pulse" version="1.1" width="640" height="480" viewBox="0 0 64 48" preserveAspectRatio="xMinYMin meet">
+	<g id="svg_3">
+	    <ellipse stroke-width="2" ry="19.58425" rx="30.85339" id="svg_1" cy="23.99853" cx="32" stroke="darkgray" fill="slategray"/>
+	    <text stroke-width="0" font-weight="100" transform="matrix(0.9047371652196257,0,0,1.099962933590827,-3.8440308998477652,-3.9874281088872903) " xml:space="preserve" text-anchor="middle" font-family="Fantasy" font-size="32" id="svg_2" y="38.21217" x="39.56242" stroke-linecap="null" stroke-linejoin="null" stroke="#000000" fill="darkorange">WDE</text>
+	</g>
+</svg>

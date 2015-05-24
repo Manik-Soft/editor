@@ -17,7 +17,18 @@ Each user can be assigned:
 [WDE] - Online Demo 
 [Video] - Short Video demo
 
-<img src = "capture.jpg"/>
+<img src = "capture.jpg" width="640" height="360"/>
+
+Version
+----
+2.0.0 beta
+
+- Removed ACE source from this repo
+- Added PHP, Javascript procedures. This Running once at the first launch. 
+    It is Download and decompress ACE source from GitHub repo.
+- Replaced PNG icons to Icon-Fonts
+- Util.js modified
+- Some invisible modification
 
 Version
 ----
